@@ -7,8 +7,8 @@ def is_valid_coordinate(coords, width, height):
 
 class Grid:
     def __init__(self, width, height, n_field_types):
-        self.height = height
         self.width = width
+        self.height = height
         self.n_field_types = n_field_types
         self.multi_dim_grid = np.zeros((n_field_types, width, height))
 
@@ -21,14 +21,17 @@ class Grid:
 
         return False
 
-    def set_value(self, field_ix, x, y, value):
+    def set_value(self, field_ix, x, y, value=1):
         self.multi_dim_grid[field_ix, x, y] = value
+
+    def reset_value(self, field_ix, x, y):
+        self.multi_dim_grid[field_ix, x, y] = 0
 
     def get_value(self, field_ix, x, y):
         return self.multi_dim_grid[field_ix, x, y]
 
     def get_free_coordinates(self):
-        return np.array(np.where(self.multi_dim_grid.sum(0) == 0))
+        return np.array(np.where(self.get_2d_grid() == 0))
 
     def get_random_free_coordinates(self):
         indices = self.get_free_coordinates()
@@ -49,9 +52,14 @@ class Grid:
 
         return free_neighbours
 
+    def get_2d_grid(self):
+        return self.multi_dim_grid.sum(0)
+
 
 def can_reach_goal(grid, start_pos, end_pos):
     width, height = grid.shape
+    start_pos = np.array(start_pos)
+    end_pos = np.array(end_pos)
 
     way_map = np.zeros_like(grid)
     way_map[start_pos[0], start_pos[1]] = 1
@@ -63,11 +71,10 @@ def can_reach_goal(grid, start_pos, end_pos):
         dead_end = True
         for direction in directions:
             new_x, new_y = new_pos = (current_pos + direction)
+            if (new_pos == end_pos).all():
+                return True
 
             if 0 <= new_x < width and 0 <= new_y < height and (grid + way_map)[new_x, new_y] == 0:
-                if (new_pos == end_pos).all():
-                    return True
-
                 way_map[new_x, new_y] = 1
                 current_path.append(current_pos)
                 current_pos = new_pos

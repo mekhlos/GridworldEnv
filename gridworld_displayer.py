@@ -13,7 +13,9 @@ class ConsoleDisplayer(Displayer):
     PIT_DIM = 2
     WALL_DIM = 3
 
-    FIELD_SYMBOLS = {PLAYER_DIM: ' o ', GOAL_DIM: ' $ ', PIT_DIM: ' X ', WALL_DIM: '---'}
+    # WALL_SYMBOLS = ['—', '|', '_| ', '|_', '|¯', '¯|']
+
+    FIELD_SYMBOLS = {PLAYER_DIM: ' o ', GOAL_DIM: ' $ ', PIT_DIM: ' X ', WALL_DIM: '‡‡‡'}
 
     def __init__(self, width, height):
         super().__init__(width, height)
