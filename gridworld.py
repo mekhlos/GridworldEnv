@@ -1,22 +1,6 @@
 import numpy as np
 import gridworld_displayer
-
-
-def get_random_coordinate_on_grid(multi_dim_grid):
-    indices = np.array(np.where(multi_dim_grid.sum(0) == 0))
-
-    if indices.shape[0] == 0:
-        raise Exception('No free coordinates on grid...')
-
-    return indices[:, np.random.randint(indices.shape[1])][::-1]
-
-
-def find_coordinates(grid):
-    indices = np.array(np.where(grid > 0))
-    if indices.shape[0] != 2 and indices.shape[1] != 1:
-        raise Exception('There should be only a single field occupied...')
-
-    return indices[:, 0][::-1]
+import helpers
 
 
 def is_valid_coordinate(coords, width, height):
@@ -65,7 +49,7 @@ class GridWorld:
     def __init__(self, width, height, displayer, random_seed=None):
         self.height = height
         self.width = width
-        self.multi_dim_grid = None
+        self.grid = None
         self.displayer = displayer
 
         if random_seed:
@@ -74,24 +58,29 @@ class GridWorld:
         self._initialise_grid()
 
     def _place_player(self):
-        x, y = get_random_coordinate_on_grid(self.multi_dim_grid)
-        self.multi_dim_grid[self.PLAYER_DIM, x, y] = 1
+        x, y = self.grid.get_random_free_coordinates()
+        self.grid.set_value(self.PLAYER_DIM, x, y, 1)
 
     def _place_goal(self):
-        x, y = get_random_coordinate_on_grid(self.multi_dim_grid)
-        self.multi_dim_grid[self.GOAL_DIM, x, y] = 1
+        x, y = self.grid.get_random_free_coordinates()
+        self.grid.set_value(self.GOAL_DIM, x, y, 1)
 
     def _place_walls(self, density):
-        indices = np.array(np.where(self.multi_dim_grid.sum(0) == 0))
+        indices = self.grid.get_free_coordinates()
+        print(indices)
+
+    def _place_walls_recursive(self, start_pos, bricks_left):
+        if bricks_left > 0:
+            pass
 
     def _initialise_grid(self):
-        self.multi_dim_grid = np.zeros((4, self.height, self.width))
+        self.grid = helpers.Grid(width, height, 4)
         self._place_player()
         self._place_goal()
         self._place_walls(0.1)
 
     def display(self):
-        self.displayer.display(self.multi_dim_grid)
+        self.displayer.display(self.grid.multi_dim_grid)
 
     def reset(self):
         self._initialise_grid()
@@ -100,7 +89,8 @@ class GridWorld:
         pass
 
 
-width, height = 10, 10
-displayer = gridworld_displayer.ConsoleDisplayer(width, height)
-gridworld = GridWorld(width, height, displayer)
-gridworld.display()
+if __name__ == '__main__':
+    width, height = 10, 10
+    displayer = gridworld_displayer.ConsoleDisplayer(width, height)
+    gridworld = GridWorld(width, height, displayer)
+    gridworld.display()
