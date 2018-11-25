@@ -108,6 +108,7 @@ class GridWorld:
 
 if __name__ == '__main__':
     width, height = 10, 10
-    displayer = gridworld_displayer.ConsoleDisplayer(width, height)
+    # displayer = gridworld_displayer.ConsoleDisplayer(width, height)
+    displayer = gridworld_displayer.PyGameDisplayer(width, height)
     gridworld = GridWorld(width, height, displayer)
     gridworld.display()
