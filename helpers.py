@@ -1,10 +1,6 @@
 import numpy as np
 
 
-def is_valid_coordinate(coords, width, height):
-    return 0 <= coords[0] < width and 0 <= coords[1] < height
-
-
 class Grid:
     def __init__(self, width, height, n_field_types):
         self.width = width
