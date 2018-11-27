@@ -2,3 +2,5 @@ PLAYER_DIM = 0
 GOAL_DIM = 1
 PIT_DIM = 2
 WALL_DIM = 3
+
+N_DIMS = 4

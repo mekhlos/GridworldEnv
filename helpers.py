@@ -51,6 +51,26 @@ class Grid:
     def get_2d_grid(self):
         return self.multi_dim_grid.sum(0)
 
+    def get_grid_for_field_type(self, field_ix):
+        return self.multi_dim_grid[field_ix]
+
+    def set_grid_for_field_type(self, field_ix, grid):
+        self.multi_dim_grid[field_ix] = grid
+
+    def copy(self):
+        new_grid = Grid(
+            self.width,
+            self.height,
+            self.n_field_types
+        )
+
+        new_grid.multi_dim_grid = self.multi_dim_grid
+
+        return new_grid
+
+    def get_occupied_positions(self, field_ix):
+        return np.array(np.where(self.multi_dim_grid[field_ix] != 0))
+
 
 def can_reach_goal(grid, start_pos, end_pos):
     width, height = grid.shape
