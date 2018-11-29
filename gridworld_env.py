@@ -4,25 +4,27 @@ import gridworld_displayer
 
 class GridworldEnv:
     def __init__(self, width, height):
-        displayer = gridworld_displayer.PyGameDisplayer(width, height)
-        self.gridworld = gridworld.GridWorld(width, height, displayer)
+        self._displayer = gridworld_displayer.PyGameDisplayer(width, height)
+        self._gridworld = gridworld.GridWorld(width, height)
 
     def get_reward(self):
-        if self.gridworld.is_done():
+        if self._gridworld.is_done():
             return 10
 
         return -1
 
     def take_action(self, action):
-        self.gridworld.take_action(action)
-        self.gridworld.display()
-        return self.gridworld.get_state(), \
+        self._gridworld.take_action(action)
+        return self._gridworld.get_state(), \
                self.get_reward(), \
-               self.gridworld.is_done(), \
+               self._gridworld.is_done(), \
                []
 
     def reset(self):
-        self.gridworld.reset()
+        self._gridworld.reset()
+
+    def display(self):
+        self._displayer.display(self._gridworld.get_state())
 
     @staticmethod
     def get_action_space():

@@ -64,8 +64,8 @@ class PyGameDisplayer(Displayer):
     def display(self, grid):
         self.screen.fill(self.BACKGROUND_COLOUR)
 
-        for i in range(self.height):
-            for j in range(self.width):
+        for j in range(self.height):
+            for i in range(self.width):
                 start_x, start_y = i * self.FIELD_BASE_WIDTH, j * self.FIELD_BASE_WIDTH
                 mid_x, mid_y = start_x + self.FIELD_BASE_WIDTH // 2, start_y + self.FIELD_BASE_WIDTH // 2
                 field_start_x = start_x + self.FIELD_PADDING
@@ -123,9 +123,3 @@ class PyGameDisplayer(Displayer):
                           [(r_leg_x - 2, leg_y - 7), (r_leg_x + 2, leg_y + 10)], 3)
 
         pygame.draw.rect(self.screen, self.YELLOW, (body_x, body_y, 12, 24), 0)
-
-
-if __name__ == '__main__':
-    d = PyGameDisplayer(5, 5)
-    a = (np.random.rand(5, 5) * 5).round(0)
-    d.display(a)

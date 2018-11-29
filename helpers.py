@@ -32,8 +32,8 @@ class Grid:
     def get_random_free_coordinates(self):
         indices = self.get_free_coordinates()
 
-        if indices.shape[0] == 0:
-            return []
+        if indices.shape[0] == 0 or indices.shape[1] == 0:
+            return None
 
         return indices[:, np.random.randint(indices.shape[1])]
 

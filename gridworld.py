@@ -50,12 +50,11 @@ class ResetSettings:
 class GridWorld:
     N_WALL_CHUNKS = 15
 
-    def __init__(self, width, height, displayer, reset_settings=ResetSettings(), random_seed=None):
+    def __init__(self, width, height, reset_settings=ResetSettings(), random_seed=None):
         self.height = height
         self.width = width
         self.grid = None
         self.saved_grid = None
-        self.displayer = displayer
         self.player_position = None
         self.goal_position = None
         self.reset_settings = reset_settings
@@ -90,10 +89,11 @@ class GridWorld:
     def _place_walls(self):
         if self.saved_grid is None or self.reset_settings.reset_walls:
             start_position = self.grid.get_random_free_coordinates()
-            avg_wall_length = (self.width + self.height) // 2
-            max_wall_length = avg_wall_length * 2
-            n_bricks = np.clip(np.random.normal(avg_wall_length, avg_wall_length * 0.7), 1, max_wall_length)
-            self._place_walls_recursive(start_position, int(n_bricks), random.sample(DIRECTIONS, 1)[0])
+            if start_position is not None:
+                avg_wall_length = (self.width + self.height) // 2
+                max_wall_length = avg_wall_length * 2
+                n_bricks = np.clip(np.random.normal(avg_wall_length, avg_wall_length * 0.7), 1, max_wall_length)
+                self._place_walls_recursive(start_position, int(n_bricks), random.sample(DIRECTIONS, 1)[0])
         else:
             self.grid.set_grid_for_field_type(
                 settings.WALL_DIM,
@@ -118,9 +118,6 @@ class GridWorld:
             self._place_walls()
 
         self.saved_grid = self.grid.copy()
-
-    def display(self):
-        self.displayer.display(self.grid.multi_dim_grid)
 
     def reset(self):
         self._initialise_grid()
@@ -149,26 +146,26 @@ if __name__ == '__main__':
     rs = ResetSettings(True, False, False)
     width, height = 10, 10
     displayer = gridworld_displayer.PyGameDisplayer(width, height)
-    gridworld = GridWorld(width, height, displayer, rs)
-    gridworld.display()
+    gridworld = GridWorld(width, height, rs)
+    displayer.display(gridworld.get_state())
     time.sleep(1)
 
     gridworld.take_action(Actions.UP)
-    gridworld.display()
+    displayer.display(gridworld.get_state())
     time.sleep(1)
 
     gridworld.take_action(Actions.UP)
-    gridworld.display()
+    displayer.display(gridworld.get_state())
     time.sleep(1)
 
     gridworld.take_action(Actions.LEFT)
-    gridworld.display()
+    displayer.display(gridworld.get_state())
     time.sleep(1)
 
     gridworld.take_action(Actions.RIGHT)
-    gridworld.display()
+    displayer.display(gridworld.get_state())
     time.sleep(1)
 
     gridworld.take_action(Actions.DOWN)
-    gridworld.display()
+    displayer.display(gridworld.get_state())
     time.sleep(1)
