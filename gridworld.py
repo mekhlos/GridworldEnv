@@ -35,6 +35,10 @@ class Actions:
         else:
             raise Exception('Unknown action...')
 
+    @staticmethod
+    def get_actions():
+        return [Actions.LEFT, Actions.RIGHT, Actions.UP, Actions.DOWN]
+
 
 class ResetSettings:
     def __init__(self, reset_agent=False, reset_goal=False, reset_walls=False):
@@ -86,7 +90,7 @@ class GridWorld:
     def _place_walls(self):
         if self.saved_grid is None or self.reset_settings.reset_walls:
             start_position = self.grid.get_random_free_coordinates()
-            avg_wall_length = (width + height) // 2
+            avg_wall_length = (self.width + self.height) // 2
             max_wall_length = avg_wall_length * 2
             n_bricks = np.clip(np.random.normal(avg_wall_length, avg_wall_length * 0.7), 1, max_wall_length)
             self._place_walls_recursive(start_position, int(n_bricks), random.sample(DIRECTIONS, 1)[0])
@@ -107,7 +111,7 @@ class GridWorld:
                 self.grid.set_value(settings.WALL_DIM, x, y, 0)
 
     def _initialise_grid(self):
-        self.grid = helpers.Grid(width, height, 4)
+        self.grid = helpers.Grid(self.width, self.height, 4)
         self._place_player()
         self._place_goal()
         for i in range(self.N_WALL_CHUNKS):
@@ -121,14 +125,20 @@ class GridWorld:
     def reset(self):
         self._initialise_grid()
 
+    def is_done(self):
+        return self.player_position == self.goal_position
+
+    def get_state(self):
+        return self.grid.multi_dim_grid
+
     def take_action(self, action_name):
         direction = Actions.get_direction(action_name)
         new_position = np.array(self.player_position) + direction
 
-        if self.grid.is_field_free(*new_position):
+        if self.grid.is_field_free(*new_position) or all(new_position == self.goal_position):
             self.grid.set_value(settings.PLAYER_DIM, *new_position)
             self.grid.reset_value(settings.PLAYER_DIM, *self.player_position)
-            self.player_position = new_position
+            self.player_position = tuple(new_position)
         else:
             print('Invalid new position...')
 
