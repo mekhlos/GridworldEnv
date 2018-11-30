@@ -3,9 +3,9 @@ import gridworld_displayer
 
 
 class GridworldEnv:
-    def __init__(self, width, height):
+    def __init__(self, width, height, **kwargs):
         self._displayer = gridworld_displayer.PyGameDisplayer(width, height)
-        self._gridworld = gridworld.GridWorld(width, height)
+        self._gridworld = gridworld.GridWorld(width, height, **kwargs)
 
     def get_reward(self):
         if self._gridworld.is_done():

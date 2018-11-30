@@ -50,11 +50,14 @@ class ResetSettings:
 class GridWorld:
     N_WALL_CHUNKS = 15
 
-    def __init__(self, width, height, reset_settings=ResetSettings(), random_seed=None):
+    def __init__(self, width, height, grid=None, reset_settings=ResetSettings(), random_seed=None):
         self.height = height
         self.width = width
         self.grid = None
-        self.saved_grid = None
+        if grid is None:
+            self.saved_grid = None
+        else:
+            self.saved_grid = helpers.Grid(width, height, settings.N_DIMS, grid)
         self.player_position = None
         self.goal_position = None
         self.reset_settings = reset_settings
@@ -75,6 +78,9 @@ class GridWorld:
                 self.saved_grid.get_grid_for_field_type(settings.PLAYER_DIM)
             )
 
+            self.player_position = tuple(self.saved_grid.get_occupied_positions(settings.PLAYER_DIM).squeeze())
+            print('a', self.player_position)
+
     def _place_goal(self):
         if self.saved_grid is None or self.reset_settings.reset_goal:
             x, y = self.grid.get_random_free_coordinates()
@@ -85,6 +91,8 @@ class GridWorld:
                 settings.GOAL_DIM,
                 self.saved_grid.get_grid_for_field_type(settings.GOAL_DIM)
             )
+
+            self.goal_position = tuple(self.saved_grid.get_occupied_positions(settings.GOAL_DIM).squeeze())
 
     def _place_walls(self):
         if self.saved_grid is None or self.reset_settings.reset_walls:

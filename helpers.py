@@ -2,11 +2,14 @@ import numpy as np
 
 
 class Grid:
-    def __init__(self, width, height, n_field_types):
+    def __init__(self, width, height, n_field_types, grid=None):
         self.width = width
         self.height = height
         self.n_field_types = n_field_types
-        self.multi_dim_grid = np.zeros((n_field_types, width, height))
+        if grid is None:
+            self.multi_dim_grid = np.zeros((n_field_types, width, height))
+        else:
+            self.multi_dim_grid = grid
 
     def is_valid_coordinates(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.height
