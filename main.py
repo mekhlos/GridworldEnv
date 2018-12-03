@@ -16,7 +16,8 @@ def run_actions(env: gridworld_env.GridworldEnv, actions):
 
 
 if __name__ == '__main__':
-    env = gridworld_env.GridworldEnv(10, 10, grid=configs.to_state(configs.config1))
+    # env = gridworld_env.GridworldEnv(4, 4)
+    env = gridworld_env.GridworldEnv(5, 5, grid=configs.to_state(configs.config2))
     all_actions = env.get_action_space()
     actions = np.random.choice(all_actions, 100)
     run_actions(env, actions)

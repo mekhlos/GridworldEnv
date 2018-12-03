@@ -2,7 +2,7 @@ import numpy as np
 import gridworld_displayer
 
 config1 = [
-    # 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    # 1 2  3  4  5  6  7  8  9 10
     [1, 3, 0, 0, 0, 0, 0, 0, 0, 0],  # 1
     [0, 3, 0, 3, 0, 3, 0, 0, 0, 0],  # 2
     [0, 0, 0, 0, 0, 3, 0, 0, 0, 0],  # 3
@@ -15,6 +15,15 @@ config1 = [
     [0, 3, 0, 0, 0, 0, 0, 0, 0, 0],  # 10
 ]
 
+config2 = [
+    # 1 2  3  4  5
+    [1, 0, 3, 2, 0],  # 1
+    [0, 3, 3, 3, 0],  # 2
+    [0, 0, 3, 0, 0],  # 3
+    [0, 3, 0, 0, 0],  # 4
+    [0, 0, 0, 3, 0],  # 5
+]
+
 
 def to_state(grid_2d):
     x = np.tile(grid_2d, [4, 1, 1])
@@ -24,7 +33,8 @@ def to_state(grid_2d):
 
 
 if __name__ == '__main__':
-    s = to_state(config1)
-    print(s)
-    d = gridworld_displayer.PyGameDisplayer(10, 10)
+    config = config2
+    h, w = np.array(config).shape
+    s = to_state(config2)
+    d = gridworld_displayer.PyGameDisplayer(w, h)
     d.display(s)
