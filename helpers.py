@@ -67,7 +67,7 @@ class Grid:
             self.n_field_types
         )
 
-        new_grid.multi_dim_grid = self.multi_dim_grid
+        new_grid.multi_dim_grid = self.multi_dim_grid.copy()
 
         return new_grid
 

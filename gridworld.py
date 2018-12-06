@@ -4,6 +4,8 @@ import helpers
 import random
 import settings
 
+from utils import logging_helper
+
 DIRECTIONS = [(-1, 0), (0, -1), (1, 0), (0, 1)]
 
 
@@ -54,6 +56,7 @@ class GridWorld:
     N_WALL_CHUNKS = 15
 
     def __init__(self, width, height, grid=None, reset_settings=ResetSettings(), random_seed=None):
+        self._logger = logging_helper.get_logger(self.__class__.__name__)
         self.height = height
         self.width = width
         self.grid = None
@@ -82,7 +85,6 @@ class GridWorld:
             )
 
             self.player_position = tuple(self.saved_grid.get_occupied_positions(settings.PLAYER_DIM).squeeze())
-            print('a', self.player_position)
 
     def _place_goal(self):
         if self.saved_grid is None or self.reset_settings.reset_goal:
@@ -148,7 +150,7 @@ class GridWorld:
             self.grid.reset_value(settings.PLAYER_DIM, *self.player_position)
             self.player_position = tuple(new_position)
         else:
-            print('Invalid new position...')
+            self._logger.debug('Invalid new position...')
 
 
 if __name__ == '__main__':
