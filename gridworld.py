@@ -39,6 +39,9 @@ class Actions:
     def get_actions():
         return [Actions.LEFT, Actions.RIGHT, Actions.UP, Actions.DOWN]
 
+    def __getitem__(self, ix):
+        return Actions.get_actions()[ix]
+
 
 class ResetSettings:
     def __init__(self, reset_agent=False, reset_goal=False, reset_walls=False):

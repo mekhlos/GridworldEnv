@@ -9,7 +9,7 @@ class GridworldEnv:
 
     def get_reward(self):
         if self._gridworld.is_done():
-            return 10
+            return 100
 
         return -1
 
@@ -22,6 +22,7 @@ class GridworldEnv:
 
     def reset(self):
         self._gridworld.reset()
+        return self._gridworld.get_state()
 
     def display(self):
         self._displayer.display(self._gridworld.get_state())
