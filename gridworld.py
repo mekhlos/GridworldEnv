@@ -53,12 +53,11 @@ class ResetSettings:
 
 
 class GridWorld:
-    N_WALL_CHUNKS = 15
-
     def __init__(self, width, height, grid=None, reset_settings=ResetSettings(), random_seed=None):
         self._logger = logging_helper.get_logger(self.__class__.__name__)
         self.height = height
         self.width = width
+        self.n_wall_chunks = (width + height) // 2
         self.grid = None
         if grid is None:
             self.saved_grid = None
@@ -127,7 +126,7 @@ class GridWorld:
         self.grid = helpers.Grid(self.width, self.height, 4)
         self._place_player()
         self._place_goal()
-        for i in range(self.N_WALL_CHUNKS):
+        for i in range(self.n_wall_chunks):
             self._place_walls()
 
         self.saved_grid = self.grid.copy()
@@ -139,7 +138,7 @@ class GridWorld:
         return self.player_position == self.goal_position
 
     def get_state(self):
-        return self.grid.multi_dim_grid
+        return self.grid.multi_dim_grid.copy()
 
     def take_action(self, action_name):
         direction = Actions.get_direction(action_name)
@@ -150,7 +149,8 @@ class GridWorld:
             self.grid.reset_value(settings.PLAYER_DIM, *self.player_position)
             self.player_position = tuple(new_position)
         else:
-            self._logger.debug('Invalid new position...')
+            # self._logger.debug('Invalid new position...')
+            pass
 
 
 if __name__ == '__main__':
