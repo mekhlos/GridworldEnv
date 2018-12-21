@@ -18,8 +18,8 @@ class GridworldEnv:
 
         return -1
 
-    def take_action(self, action):
-        self._gridworld.take_action(action)
+    def update(self, action):
+        self._gridworld.update(action)
 
         self.prev_state = self.state if self.state is not None else None
         self.state = self._gridworld.get_state()
@@ -33,6 +33,9 @@ class GridworldEnv:
         self._gridworld.reset()
         self.prev_state = None
         self.state = self._gridworld.get_state()
+        return self.state
+
+    def get_state(self):
         return self.state
 
     def display(self):
@@ -50,7 +53,7 @@ if __name__ == '__main__':
     env = GridworldEnv(4, 4)
     actions = env.get_action_space()
     for i in range(10):
-        env.take_action(np.random.choice(actions))
+        env.update(np.random.choice(actions))
         print(env.get_reward())
         env.display()
         time.sleep(0.2)

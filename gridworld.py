@@ -140,7 +140,7 @@ class GridWorld:
     def get_state(self):
         return self.grid.multi_dim_grid.copy()
 
-    def take_action(self, action_name):
+    def update(self, action_name):
         direction = Actions.get_direction(action_name)
         new_position = np.array(self.player_position) + direction
 
@@ -163,22 +163,22 @@ if __name__ == '__main__':
     displayer.display(gridworld.get_state())
     time.sleep(1)
 
-    gridworld.take_action(Actions.UP)
+    gridworld.update(Actions.UP)
     displayer.display(gridworld.get_state())
     time.sleep(1)
 
-    gridworld.take_action(Actions.UP)
+    gridworld.update(Actions.UP)
     displayer.display(gridworld.get_state())
     time.sleep(1)
 
-    gridworld.take_action(Actions.LEFT)
+    gridworld.update(Actions.LEFT)
     displayer.display(gridworld.get_state())
     time.sleep(1)
 
-    gridworld.take_action(Actions.RIGHT)
+    gridworld.update(Actions.RIGHT)
     displayer.display(gridworld.get_state())
     time.sleep(1)
 
-    gridworld.take_action(Actions.DOWN)
+    gridworld.update(Actions.DOWN)
     displayer.display(gridworld.get_state())
     time.sleep(1)

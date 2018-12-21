@@ -8,7 +8,7 @@ def run_actions(env: gridworld_env.GridworldEnv, actions):
     env.reset()
     for action in actions:
         print(action)
-        _, _, is_done, _ = env.take_action(action)
+        _, _, is_done, _ = env.update(action)
         env.display()
         time.sleep(1)
         if is_done:
