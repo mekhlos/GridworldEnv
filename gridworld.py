@@ -67,7 +67,7 @@ class GridWorld:
         self.goal_position = None
         self.reset_settings = reset_settings
 
-        if random_seed:
+        if random_seed is not None:
             np.random.seed(random_seed)
 
         self._initialise_grid()

@@ -7,7 +7,7 @@ class GridworldEnv:
         self._displayer = gridworld_displayer.PyGameDisplayer(width, height)
         self._gridworld = gridworld.GridWorld(width, height, **kwargs)
         self.prev_state = None
-        self.state = None
+        self.state = self._gridworld.get_state()
 
     def get_reward(self):
         if self._gridworld.is_done():
