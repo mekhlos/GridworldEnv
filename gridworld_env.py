@@ -13,9 +13,6 @@ class GridworldEnv:
         if self._gridworld.is_done():
             return 10
 
-        if self.prev_state is not None and self.state is not None and (self.prev_state[0] == self.state[0]).all():
-            return -0.1
-
         return -0.1
 
     def update(self, action):
