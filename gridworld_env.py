@@ -11,9 +11,9 @@ class GridworldEnv:
 
     def get_reward(self):
         if self._gridworld.is_done():
-            return 10
+            return 1
 
-        return -0.1
+        return -0.01
 
     def update(self, action):
         self._gridworld.update(action)
