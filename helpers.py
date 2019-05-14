@@ -14,9 +14,11 @@ class Grid:
     def is_valid_coordinates(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.height
 
-    def is_field_free(self, x, y):
+    def is_field_free(self, x, y, dims=()):
+        if not dims:
+            dims = list(range(self.multi_dim_grid.shape[0]))
         if self.is_valid_coordinates(x, y):
-            return self.multi_dim_grid[:, x, y].sum() == 0
+            return self.multi_dim_grid[dims, x, y].sum() == 0
 
         return False
 

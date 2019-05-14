@@ -35,7 +35,7 @@ class Actions:
         elif action == Actions.DOWN:
             return DIRECTIONS[3]
         else:
-            raise Exception('Unknown action...')
+            raise Exception(f'Unknown action "{action}"!')
 
     @staticmethod
     def get_actions():
@@ -46,10 +46,11 @@ class Actions:
 
 
 class ResetSettings:
-    def __init__(self, reset_agent=False, reset_goal=False, reset_walls=False):
+    def __init__(self, reset_agent=False, reset_goal=False, reset_walls=False, reset_pits=False):
         self.reset_agent = reset_agent or reset_walls
         self.reset_goal = reset_goal or reset_walls
         self.reset_walls = reset_walls
+        self.reset_pits = reset_pits
 
 
 class GridWorld:
@@ -122,6 +123,15 @@ class GridWorld:
             else:
                 self.grid.set_value(settings.WALL_DIM, x, y, 0)
 
+    def _place_pit(self):
+        if self.saved_grid is None or self.reset_settings.reset_pits:
+            pass
+        else:
+            self.grid.set_grid_for_field_type(
+                settings.PIT_DIM,
+                self.saved_grid.get_grid_for_field_type(settings.PIT_DIM)
+            )
+
     def _initialise_grid(self):
         self.grid = helpers.Grid(self.width, self.height, 4)
         self._place_player()
@@ -129,6 +139,7 @@ class GridWorld:
         for i in range(self.n_wall_chunks):
             self._place_walls()
 
+        self._place_pit()
         self.saved_grid = self.grid.copy()
 
     def reset(self):
@@ -144,7 +155,7 @@ class GridWorld:
         direction = Actions.get_direction(action_name)
         new_position = np.array(self.player_position) + direction
 
-        if self.grid.is_field_free(*new_position) or all(new_position == self.goal_position):
+        if self.grid.is_field_free(*new_position, [settings.WALL_DIM]) or all(new_position == self.goal_position):
             self.grid.set_value(settings.PLAYER_DIM, *new_position)
             self.grid.reset_value(settings.PLAYER_DIM, *self.player_position)
             self.player_position = tuple(new_position)

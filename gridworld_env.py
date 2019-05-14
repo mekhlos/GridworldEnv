@@ -1,5 +1,7 @@
 import gridworld
 import gridworld_displayer
+import settings
+import numpy as np
 
 
 class GridworldEnv:
@@ -13,10 +15,13 @@ class GridworldEnv:
         if self._gridworld.is_done():
             return 1
 
-        return -0.01
+        if np.logical_and(self.state[settings.PIT_DIM], self.state[settings.PLAYER_DIM]).any():
+            return -10
+
+        return -0.001
 
     def update(self, action):
-        self._gridworld.update(action)
+        self._gridworld.update(gridworld.Actions.get_actions()[action])
 
         self.prev_state = self.state if self.state is not None else None
         self.state = self._gridworld.get_state()
@@ -40,7 +45,10 @@ class GridworldEnv:
 
     @staticmethod
     def get_action_space():
-        return gridworld.Actions.get_actions()
+        return list(range(len(gridworld.Actions.get_actions())))
+
+    def close(self):
+        pass
 
 
 if __name__ == '__main__':

@@ -2,6 +2,8 @@ import numpy as np
 import pygame
 import settings
 
+from resources.res_path import RES_DIR
+
 
 class Displayer:
     def __init__(self, width, height):
@@ -60,6 +62,9 @@ class PyGameDisplayer(Displayer):
         pygame.init()
         self.screen = pygame.display.set_mode((width * self.FIELD_BASE_WIDTH, height * self.FIELD_BASE_WIDTH))
         self.screen.fill(self.BACKGROUND_COLOUR)
+        skull_img = pygame.image.load(f'{RES_DIR}/skull.png')
+        s = self.FIELD_WIDTH - 8
+        self.skull_img = pygame.transform.scale(skull_img, (s, s))
 
     def display(self, grid):
         self.screen.fill(self.BACKGROUND_COLOUR)
@@ -75,12 +80,15 @@ class PyGameDisplayer(Displayer):
 
                 if grid[settings.PLAYER_DIM, i, j] == 1:
                     self.draw_robot(mid_x, mid_y)
-                if grid[settings.GOAL_DIM, i, j] == 1:
+                elif grid[settings.GOAL_DIM, i, j] == 1:
                     self.draw_goal(mid_x, mid_y)
-                if grid[settings.WALL_DIM, i, j] == 1:
-                    self.draw_wall(mid_x, mid_y)
+                elif grid[settings.WALL_DIM, i, j] == 1:
+                    self.draw_wall(start_x, start_y)
+                elif grid[settings.PIT_DIM, i, j] == 1:
+                    self.draw_pit(start_x, start_y)
 
-        pygame.display.update()
+        pygame.display.flip()
+        pygame.event.pump()
 
     def draw_field(self, x, y):
         pygame.draw.rect(self.screen, self.BLACK, (x, y, self.FIELD_WIDTH, self.FIELD_WIDTH), 1)
@@ -96,8 +104,9 @@ class PyGameDisplayer(Displayer):
 
     def draw_wall(self, x, y):
         r = self.FIELD_WIDTH // 2
-        pygame.draw.lines(self.screen, self.OBSTACLE_COLOUR, False, [(x - r, y - 1), (x + r - 1, y - 1)], 20)
-        pygame.draw.lines(self.screen, self.OBSTACLE_COLOUR, False, [(x - 1, y - r), (x - 1, y + r - 1)], 20)
+        # pygame.draw.lines(self.screen, self.OBSTACLE_COLOUR, False, [(x - r, y - 1), (x + r - 1, y - 1)], 20)
+        # pygame.draw.lines(self.screen, self.OBSTACLE_COLOUR, False, [(x - 1, y - r), (x - 1, y + r - 1)], 20)
+        pygame.draw.rect(self.screen, self.BLACK, (x, y, self.FIELD_WIDTH, self.FIELD_WIDTH), 0)
 
     def draw_figure(self, x_mid, y_mid):
         head_y = y_mid - 20
@@ -123,3 +132,8 @@ class PyGameDisplayer(Displayer):
                           [(r_leg_x - 2, leg_y - 7), (r_leg_x + 2, leg_y + 10)], 3)
 
         pygame.draw.rect(self.screen, self.YELLOW, (body_x, body_y, 12, 24), 0)
+
+    def draw_pit(self, x, y):
+        self.screen.blit(self.skull_img, (x + 3, y + 4))
+        # self.screen.blit(self.skull_img, self.skull_img_rect)
+        # pygame.draw.rect(self.screen, self.BLACK, (x_mid, y_mid, self.FIELD_WIDTH, self.FIELD_WIDTH), 0)
